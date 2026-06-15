@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MemoraAI - Nearby Hospitals</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+        @keyframes fadeSlideUp{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes floatIcon{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+@keyframes glow{
+    0%,100%{
+        box-shadow:0 0 20px rgba(255,255,255,0.15);
+    }
+    50%{
+        box-shadow:0 0 35px rgba(255,255,255,0.35);
+    }
+}
+
+.sidebar{
+    animation:fadeSlideUp 0.7s ease;
+}
+
+.topbar{
+    animation:fadeSlideUp 0.8s ease;
+}
+
+.hero{
+    animation:fadeSlideUp 1s ease, glow 3s infinite ease-in-out;
+}
+
+.hero i{
+    animation:floatIcon 3s infinite ease-in-out;
+}
+
+.card{
+    animation:fadeSlideUp 1.1s ease;
+}
+
+.card:nth-child(2){
+    animation-delay:0.1s;
+}
+
+.card:nth-child(3){
+    animation-delay:0.2s;
+}
+
+.card:nth-child(4){
+    animation-delay:0.3s;
+}
+
+.panel{
+    animation:fadeSlideUp 1.2s ease;
+}
+
+.user,
+.card,
+.panel,
+.sidebar a,
+.hero button{
+    transition:0.35s ease;
+}
+
+.user:hover,
+.card:hover,
+.panel:hover,
+.hero button:hover{
+    transform:translateY(-8px) scale(1.03);
+}
+
+.sidebar a:hover{
+    transform:translateX(10px) scale(1.02);
+}
+
+.default-avatar{
+    transition:0.4s ease;
+}
+
+.user:hover .default-avatar{
+    transform:rotate(8deg) scale(1.08);
+}
+        body{
+            min-height:100vh;
+            background:linear-gradient(135deg,#667eea,#b06ab3);
+            padding:40px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .hero{
+            background:rgba(255,255,255,0.12);
+            backdrop-filter:blur(15px);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:30px;
+            padding:50px;
+            color:white;
+            margin-bottom:30px;
+        }
+
+        .hero h1{
+            font-size:60px;
+            font-weight:bold;
+            margin-bottom:15px;
+        }
+
+        .hero p{
+            font-size:22px;
+            opacity:0.9;
+            margin-bottom:30px;
+        }
+
+        .btn{
+            background:white;
+            color:#7b4dc4;
+            border:none;
+            padding:15px 35px;
+            border-radius:15px;
+            font-size:18px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            transform:translateY(-3px);
+        }
+
+        .location-card{
+            background:rgba(255,255,255,0.12);
+            backdrop-filter:blur(15px);
+            border-radius:20px;
+            padding:25px;
+            color:white;
+            margin-bottom:25px;
+            font-size:24px;
+            font-weight:600;
+        }
+
+        .hospital-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+            gap:25px;
+        }
+
+        .hospital-card{
+            background:rgba(255,255,255,0.15);
+            backdrop-filter:blur(15px);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:25px;
+            padding:25px;
+            color:white;
+            transition:0.3s;
+        }
+
+        .hospital-card:hover{
+            transform:translateY(-5px);
+        }
+
+        .hospital-card h3{
+            margin-bottom:15px;
+            font-size:22px;
+        }
+
+        .hospital-card p{
+            font-size:18px;
+        }
+
+        .loading{
+            color:white;
+            font-size:22px;
+            margin-top:20px;
+        }
+
+        .message{
+            color:white;
+            font-size:22px;
+            margin-top:20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="hero">
+
+        <h1>Nearby Hospitals</h1>
+
+        <p>
+            Find hospitals and healthcare centers closest
+            to your current location.
+        </p>
+
+        <button class="btn" onclick="findNearestHospital()">
+            Find Nearest Hospital
+        </button>
+
+    </div>
+
+    <div id="hospital-results"></div>
+
+</div>
+
+<script>
+
+function findNearestHospital() {
+
+    if (!navigator.geolocation) {
+
+        alert("Geolocation is not supported.");
+
+        return;
+    }
+
+    document.getElementById("hospital-results").innerHTML =
+        "<div class='loading'>Getting your location...</div>";
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch(`/nearest-hospitals/?lat=${lat}&lon=${lon}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                let html = `
+                    <div class="location-card">
+                        Current Location: ${data.location}
+                    </div>
+                `;
+
+                if (!data.hospitals || data.hospitals.length === 0) {
+
+                    html += `
+                        <div class="message">
+                            No hospitals found nearby.
+                        </div>
+                    `;
+
+                } else {
+
+                    html += `<div class="hospital-grid">`;
+
+                    data.hospitals.forEach((hospital,index) => {
+
+                        html += `
+                            <div class="hospital-card">
+
+                                <h3>
+                                    🏥 ${index + 1}. ${hospital.name}
+                                </h3>
+
+                                <p>
+                                    Distance:
+                                    ${hospital.distance} km
+                                </p>
+
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+                }
+
+                document.getElementById("hospital-results").innerHTML =
+                    html;
+
+            })
+
+            .catch(error => {
+
+                document.getElementById("hospital-results").innerHTML =
+                `
+                <div class="message">
+                    Error fetching hospital data.
+                </div>
+                `;
+            });
+
+        },
+
+        function(error) {
+
+            alert(
+                "Please allow location access to find nearby hospitals."
+            );
+
+        }
+
+    );
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MemoraAI - AI Healthcare Assistant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:white;
+    background:linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2,
+        #f093fb
+    );
+    overflow:hidden;
+    position:relative;
+}
+
+/* Background Glow Effects */
+
+body::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:#8b5cf6;
+    border-radius:50%;
+    filter:blur(180px);
+    top:-150px;
+    left:-150px;
+    opacity:.25;
+}
+
+body::after{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    background:#c084fc;
+    border-radius:50%;
+    filter:blur(180px);
+    bottom:-150px;
+    right:-150px;
+    opacity:.25;
+}
+
+/* Main Layout */
+
+.container{
+    position:relative;
+    z-index:2;
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:60px;
+
+    padding:40px;
+}
+
+/* Glassmorphism Card */
+
+.glass{
+    background:rgba(255,255,255,0.15);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.25);
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.15);
+
+    border-radius:30px;
+}
+
+/* Left Side */
+
+.hero{
+    width:60%;
+    max-width:750px;
+
+    padding:50px;
+    color:white;
+
+    transition:.4s;
+}
+
+.hero:hover{
+    transform:translateY(-8px);
+}
+
+.logo{
+    font-size:3rem;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:4rem;
+    line-height:1.1;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:1.1rem;
+    line-height:1.8;
+    opacity:.95;
+    margin-bottom:30px;
+}
+
+.features{
+    display:grid;
+    gap:15px;
+}
+
+.feature{
+    background:rgba(255,255,255,0.12);
+    padding:15px 20px;
+    border-radius:15px;
+    transition:.3s;
+}
+
+.feature:hover{
+    background:rgba(255,255,255,0.22);
+    transform:translateX(8px);
+}
+
+/* Login Card */
+
+.login-box{
+    width:420px;
+
+    padding:40px;
+
+    transition:.4s;
+}
+
+.login-box:hover{
+    transform:translateY(-8px);
+}
+
+.login-box h2{
+    text-align:center;
+    color:white;
+    margin-bottom:25px;
+}
+
+input{
+    width:100%;
+
+    padding:16px;
+
+    margin-bottom:15px;
+
+    border:none;
+    outline:none;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,0.2);
+
+    color:white;
+
+    font-size:15px;
+}
+
+input::placeholder{
+    color:rgba(255,255,255,0.8);
+}
+
+button{
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:white;
+
+    color:#764ba2;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.signup-text{
+    margin-top:20px;
+    text-align:center;
+    color:white;
+}
+
+.signup-text a{
+    color:white;
+    font-weight:600;
+    text-decoration:none;
+}
+
+/* Modal */
+
+.modal{
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,0.5);
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:1000;
+}
+
+.modal-content{
+    width:420px;
+
+    padding:35px;
+
+    border-radius:25px;
+
+    background:darkslateblue;
+}
+
+.modal-content h2{
+    margin-bottom:20px;
+    color:#764ba2;
+}
+
+.modal-content input{
+    background:rgba(255,255,255,0.2);
+    color:#333;
+}
+
+.close{
+    float:right;
+    font-size:30px;
+    cursor:pointer;
+}
+
+/* Responsive */
+
+@media(max-width:1000px){
+
+    .container{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .hero{
+        width:100%;
+    }
+
+    .hero h1{
+        font-size:3rem;
+    }
+
+    .login-box{
+        width:100%;
+        max-width:450px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Left Section -->
+
+    <div class="hero glass">
+
+        <div class="logo">
+            🩺 MemoraAI
+        </div>
+
+        <h1>
+            Your Health,<br>
+            Simplified.
+        </h1>
+
+        <p>
+            AI-powered elderly memory management, medicine reminders,
+            prescription tracking, hospital recommendations and healthcare
+            assistance — all in one intelligent platform.
+        </p>
+
+    </div>
+
+    <!-- Right Section -->
+
+    <div class="login-box glass">
+
+        <h2>Login</h2>
+
+        <form action="{% url 'dashboard' %}" autocomplete="off">
+
+           <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            autocomplete="off"
+            required>
+
+            <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            autocomplete="new-password"
+            required>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <p class="signup-text">
+            Don't have an account?
+            <a href="#" onclick="openModal()">
+                Sign Up
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Sign Up Modal -->
+
+<div class="modal" id="signupModal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeModal()">
+            &times;
+        </span>
+
+        <h2>Create Account</h2>
+
+        <form>
+
+            <input
+type="text"
+name="username"
+placeholder="Username"
+autocomplete="off"
+required>
+
+<input
+type="email"
+name="signup_email"
+placeholder="Email"
+autocomplete="off"
+required>
+
+<input
+type="password"
+name="signup_password"
+placeholder="Password"
+autocomplete="new-password"
+required>
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function openModal(){
+
+    document.getElementById("signupModal").style.display="flex";
+
+    document.querySelector("#signupModal form").reset();
+
+}
+
+function closeModal(){
+
+    document.getElementById("signupModal").style.display="none";
+
+}
+
+window.onload = function(){
+
+    const forms = document.querySelectorAll("form");
+
+    forms.forEach(form => form.reset());
+
+};
+
+</script>
+
+</script>
+
+</body>
+</html>

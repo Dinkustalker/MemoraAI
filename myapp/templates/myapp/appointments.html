@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Appointments</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+    padding:40px;
+}
+
+.glass-card{
+    max-width:900px;
+    margin:auto;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-radius:35px;
+    padding:40px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    font-size:55px;
+    margin-bottom:30px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:18px;
+    margin-top:15px;
+    border:none;
+    border-radius:18px;
+    font-size:18px;
+    outline:none;
+}
+
+select{
+    background:white;
+    cursor:pointer;
+}
+
+textarea{
+    height:140px;
+    resize:vertical;
+}
+
+.button-container{
+    text-align:left;
+    margin-top:25px;
+}
+
+.btn{
+    padding:18px 45px;
+    border:none;
+    border-radius:50px;
+    background:white;
+    color:#764ba2;
+    font-size:20px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+@media(max-width:768px){
+    body{
+        padding:20px;
+    }
+
+    .glass-card{
+        padding:25px;
+    }
+
+    h1{
+        font-size:40px;
+    }
+}
+/* Animations */
+
+@keyframes fadeSlideUp{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes floatCard{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-8px);
+    }
+}
+
+@keyframes glow{
+    0%,100%{
+        box-shadow:
+        0 10px 30px rgba(0,0,0,0.2);
+    }
+    50%{
+        box-shadow:
+        0 20px 50px rgba(255,255,255,0.25);
+    }
+}
+
+/* Page Load */
+
+body{
+    animation:fadeSlideUp .8s ease;
+}
+
+/* Main Card */
+
+.glass-card{
+    animation:
+    fadeSlideUp 1s ease,
+    glow 4s infinite ease-in-out;
+}
+
+/* Heading */
+
+h1{
+    animation:fadeSlideUp 1.2s ease;
+}
+
+/* Form Elements */
+
+input,
+select,
+textarea{
+
+    transition:.3s;
+
+    animation:fadeSlideUp 1.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    transform:scale(1.02);
+
+    box-shadow:
+    0 0 20px rgba(255,255,255,.25);
+
+    background:
+    rgba(255,255,255,.95);
+}
+
+/* Hospital Dropdown */
+
+#hospitalSelect{
+    animation:fadeSlideUp 1.5s ease;
+}
+
+/* Button */
+
+.btn{
+
+    animation:fadeSlideUp 1.6s ease;
+
+    transition:.3s;
+}
+
+.btn:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.05);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.25);
+}
+
+/* Card Hover */
+
+.glass-card:hover{
+
+    transform:
+    translateY(-8px);
+
+    transition:.4s;
+}
+
+/* Floating Effect */
+
+.glass-card{
+    max-width:900px;
+    margin:auto;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-radius:35px;
+    padding:40px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    transition:0.4s;
+};
+.glass-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<div class="glass-card">
+
+<h1>Book Appointment</h1>
+
+<form method="POST" action="{% url 'appointments' %}">
+{% csrf_token %}
+
+<input
+type="text"
+name="doctor"
+placeholder="Doctor Name"
+required>
+
+<select name="hospital" id="hospitalSelect" required>
+    <option value="">Getting nearby hospitals...</option>
+</select>
+
+<input
+type="date"
+name="date"
+required>
+
+<input
+type="time"
+name="time"
+required>
+
+<input
+type="text"
+name="department"
+placeholder="Department"
+required>
+
+<textarea
+name="purpose"
+placeholder="Purpose of Appointment"
+required></textarea>
+
+<div class="button-container">
+    <button class="btn" type="submit">
+        Book Appointment
+    </button>
+</div>
+
+</form>
+
+</div>
+
+<script>
+window.onload = function () {
+
+    const hospitalSelect = document.getElementById("hospitalSelect");
+
+    if (!navigator.geolocation) {
+        hospitalSelect.innerHTML =
+            "<option value=''>Location not supported</option>";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch(`/nearest-hospitals/?lat=${lat}&lon=${lon}`)
+            .then(response => response.json())
+            .then(data => {
+
+                hospitalSelect.innerHTML =
+                    "<option value=''>-- Select Nearby Hospital --</option>";
+
+                if (!data.hospitals || data.hospitals.length === 0) {
+                    hospitalSelect.innerHTML =
+                        "<option value=''>No nearby hospitals found</option>";
+                    return;
+                }
+
+                data.hospitals.forEach(hospital => {
+
+                    const option = document.createElement("option");
+
+                    option.value = hospital.name;
+
+                    option.textContent =
+                        `${hospital.name} - ${hospital.distance} km`;
+
+                    hospitalSelect.appendChild(option);
+                });
+
+            })
+            .catch(error => {
+                hospitalSelect.innerHTML =
+                    "<option value=''>Error loading hospitals</option>";
+            });
+
+        },
+
+        function(error) {
+            hospitalSelect.innerHTML =
+                "<option value=''>Please allow location access</option>";
+        }
+
+    );
+};
+</script>
+
+</body>
+</html>

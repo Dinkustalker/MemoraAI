@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Appointment Details</title>
+
+<style>
+body{
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+    padding:40px;
+}
+
+.glass-card{
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:25px;
+    padding:30px;
+    color:white;
+    margin-bottom:25px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.2);
+}
+
+h1{
+    color:white;
+    text-align:center;
+    margin-bottom:30px;
+}
+
+p{
+    font-size:18px;
+}
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-card {
+    animation: fadeSlide 0.7s ease forwards;
+}
+
+.glass-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    transition: 0.4s;
+}
+
+h1 {
+    animation: fadeSlide 0.8s ease forwards;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Booked Appointments</h1>
+
+{% for appointment in appointments %}
+
+<div class="glass-card">
+    <p><b>Doctor:</b> {{ appointment.doctor }}</p>
+    <p><b>Hospital:</b> {{ appointment.hospital }}</p>
+    <p><b>Date:</b> {{ appointment.date }}</p>
+    <p><b>Time:</b> {{ appointment.time }}</p>
+    <p><b>Department:</b> {{ appointment.department }}</p>
+    <p><b>Purpose:</b> {{ appointment.purpose }}</p>
+</div>
+
+{% empty %}
+
+<div class="glass-card">
+    <p>No appointments booked yet.</p>
+</div>
+
+{% endfor %}
+
+</body>
+</html>

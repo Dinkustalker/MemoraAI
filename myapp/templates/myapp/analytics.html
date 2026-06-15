@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elderly Health Analytics</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+.professional-chart{
+height:420px;
+background:rgba(255,255,255,0.95);
+border-radius:18px;
+padding:30px 25px 45px 60px;
+display:flex;
+position:relative;
+margin-top:25px;
+box-shadow:inset 0 0 20px rgba(0,0,0,0.08);
+}
+
+.y-axis{
+width:50px;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+align-items:flex-end;
+padding-right:12px;
+color:#333;
+font-weight:600;
+font-size:14px;
+}
+/* Analytics Animations */
+
+body{
+    animation:fadeSlideUp 0.8s ease;
+}
+
+.container{
+    animation:fadeSlideUp 0.9s ease;
+}
+
+.glass-card{
+    animation:fadeSlideUp 1s ease;
+}
+
+.heading{
+    animation:floatIcon 3s ease-in-out infinite;
+}
+
+.card{
+    animation:fadeSlideUp 1.1s ease;
+    transition:0.35s ease;
+}
+
+.card:nth-child(1){
+    animation-delay:0.1s;
+}
+
+.card:nth-child(2){
+    animation-delay:0.2s;
+}
+
+.card:nth-child(3){
+    animation-delay:0.3s;
+}
+
+.card:nth-child(4){
+    animation-delay:0.4s;
+}
+
+.card:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 18px 45px rgba(0,0,0,0.3);
+}
+
+.chart-box{
+    animation:fadeSlideUp 1.3s ease;
+    transition:0.35s ease;
+}
+
+.chart-box:hover{
+    transform:translateY(-6px);
+}
+
+.professional-chart{
+    animation:fadeSlideUp 1.4s ease;
+}
+
+.bar{
+    animation:barGrow 1.4s ease forwards;
+    transform-origin:bottom;
+}
+
+@keyframes barGrow{
+    from{
+        transform:scaleY(0);
+    }
+    to{
+        transform:scaleY(1);
+    }
+}
+
+.bar-group:nth-child(6) .bar{
+    animation-delay:0.1s;
+}
+
+.bar-group:nth-child(7) .bar{
+    animation-delay:0.2s;
+}
+
+.bar-group:nth-child(8) .bar{
+    animation-delay:0.3s;
+}
+
+.bar-group:nth-child(9) .bar{
+    animation-delay:0.4s;
+}
+
+.bar-group:nth-child(10) .bar{
+    animation-delay:0.5s;
+}
+
+.bar-group:nth-child(11) .bar{
+    animation-delay:0.6s;
+}
+
+.bar-group:nth-child(12) .bar{
+    animation-delay:0.7s;
+}
+
+.value{
+    animation:fadeSlideUp 1.5s ease;
+}
+
+.day{
+    animation:fadeSlideUp 1.6s ease;
+}
+
+.alert{
+    animation:fadeSlideUp 1.5s ease;
+    transition:0.35s ease;
+}
+
+.alert:hover{
+    transform:translateX(8px) scale(1.02);
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+.good:hover{
+    transform:translateX(8px) scale(1.02);
+}
+
+.metric{
+    animation:pulseMetric 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseMetric{
+    0%,100%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.05);
+    }
+}   
+.graph-area{
+flex:1;
+height:100%;
+display:flex;
+align-items:flex-end;
+justify-content:space-around;
+position:relative;
+border-left:3px solid #333;
+border-bottom:3px solid #333;
+padding:0 20px;
+}
+
+.grid-line{
+position:absolute;
+left:0;
+width:100%;
+height:1px;
+background:rgba(0,0,0,0.12);
+}
+
+.grid-line:nth-child(1){bottom:20%;}
+.grid-line:nth-child(2){bottom:40%;}
+.grid-line:nth-child(3){bottom:60%;}
+.grid-line:nth-child(4){bottom:80%;}
+.grid-line:nth-child(5){bottom:100%;}
+
+.bar-group{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-end;
+z-index:2;
+}
+
+.value{
+color:#333;
+font-size:14px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.bar{
+width:55px;
+background:linear-gradient(180deg,#667eea,#764ba2);
+border-radius:12px 12px 0 0;
+transition:.3s;
+box-shadow:0 8px 18px rgba(118,75,162,.35);
+}
+
+.bar:hover{
+transform:scaleY(1.05);
+filter:brightness(1.1);
+}
+
+.day{
+color:#333;
+font-weight:700;
+margin-top:12px;
+font-size:14px;
+}
+
+.axis-label-x{
+text-align:center;
+margin-top:15px;
+font-weight:700;
+color:white;
+}
+body{
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2,
+        #f093fb
+    );
+    padding:40px;
+}
+.glass-card{
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    color:white;
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.2);
+
+    transition:0.4s;
+}
+.glass-card:hover{
+
+    transform:
+    translateY(-10px)
+    scale(1.02);
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,0.3);
+
+    border:
+    1px solid rgba(255,255,255,0.4);
+}
+.btn{
+
+    padding:16px 30px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:white;
+
+    color:#764ba2;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+.btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.2);
+
+}
+input,
+textarea{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:
+    rgba(255,255,255,0.2);
+    color:white;
+
+    font-size:17px;
+
+    outline:none;
+
+    margin-top:10px;
+}
+input::placeholder,
+textarea::placeholder{
+    color:rgba(255,255,255,0.8);
+}
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.heading{
+font-size:38px;
+font-weight:700;
+margin-bottom:30px;
+text-align:center;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
+border-radius:20px;
+padding:25px;
+box-shadow:0 8px 30px rgba(0,0,0,0.3);
+}
+
+.card h3{
+margin-bottom:15px;
+}
+
+.metric{
+font-size:36px;
+font-weight:bold;
+}
+
+.chart-box{
+margin-top:30px;
+background:rgba(255,255,255,0.1);
+border-radius:20px;
+padding:25px;
+}
+
+.chart{
+height:350px;
+background:white;
+border-radius:15px;
+display:flex;
+align-items:flex-end;
+justify-content:space-around;
+padding:20px;
+margin-top:20px;
+}
+
+.bar{
+width:55px;
+background:#38bdf8;
+border-radius:10px 10px 0 0;
+}
+
+.day{
+text-align:center;
+color:black;
+margin-top:10px;
+font-weight:bold;
+}
+
+.section-title{
+margin-top:35px;
+margin-bottom:20px;
+font-size:28px;
+}
+
+.alert{
+padding:15px;
+background:#dc2626;
+border-radius:12px;
+margin-top:15px;
+font-size:18px;
+}
+
+.good{
+background:#16a34a;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="glass-card">
+<div class="glass-hover"></div>
+<h1 class="heading">
+📊 Elderly Health Analytics Dashboard
+</h1>
+
+<div class="dashboard">
+
+<div class="card">
+<h3>Medicine Adherence</h3>
+<div class="metric">92%</div>
+</div>
+
+<div class="card">
+<h3>Appointments Attended</h3>
+<div class="metric">15</div>
+</div>
+
+<div class="card">
+<h3>Health Score</h3>
+<div class="metric">88/100</div>
+</div>
+
+<div class="card">
+<h3>Daily Steps</h3>
+<div class="metric">7200</div>
+</div>
+
+</div>
+
+<!-- GRAPH SECTION -->
+
+<!-- GRAPH SECTION -->
+
+<div class="chart-box">
+
+<h2>📈 Weekly Health Trend</h2>
+
+<div class="professional-chart">
+
+<div class="y-axis">
+<span>100</span>
+<span>80</span>
+<span>60</span>
+<span>40</span>
+<span>20</span>
+<span>0</span>
+</div>
+
+<div class="graph-area">
+
+<div class="grid-line"></div>
+<div class="grid-line"></div>
+<div class="grid-line"></div>
+<div class="grid-line"></div>
+<div class="grid-line"></div>
+
+<div class="bar-group">
+<div class="value">45</div>
+<div class="bar" style="height:45%;"></div>
+<div class="day">Mon</div>
+</div>
+
+<div class="bar-group">
+<div class="value">58</div>
+<div class="bar" style="height:58%;"></div>
+<div class="day">Tue</div>
+</div>
+
+<div class="bar-group">
+<div class="value">54</div>
+<div class="bar" style="height:54%;"></div>
+<div class="day">Wed</div>
+</div>
+
+<div class="bar-group">
+<div class="value">70</div>
+<div class="bar" style="height:70%;"></div>
+<div class="day">Thu</div>
+</div>
+
+<div class="bar-group">
+<div class="value">82</div>
+<div class="bar" style="height:82%;"></div>
+<div class="day">Fri</div>
+</div>
+
+<div class="bar-group">
+<div class="value">91</div>
+<div class="bar" style="height:91%;"></div>
+<div class="day">Sat</div>
+</div>
+
+<div class="bar-group">
+<div class="value">96</div>
+<div class="bar" style="height:96%;"></div>
+<div class="day">Sun</div>
+</div>
+
+</div>
+
+</div>
+
+<p class="axis-label-x">
+Days of the Week
+</p>
+
+</div>
+<h2 class="section-title">
+🚨 Health Alerts
+</h2>
+
+<div class="alert">
+Missed Medication Reminder Today
+</div>
+
+<div class="alert good">
+All Appointments Attended This Week
+</div>
+
+</div>
+
+</body>
+</html>
